@@ -1,25 +1,79 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { createContext } from 'react';
+
 import './App.css';
+import TopHeader from './component/Header/TopHeader';
+import Order from './component/Order/Order';
+import Shop from './component/Shop/Shop';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import Inventory from './component/Inventory/Inventory';
+import NotFound from './component/Not Found/NotFound';
+import ProductDetail from './component/Product Detail/ProductDetail';
+import Shipment from './component/Shipment/Shipment';
+import Login from './component/Login/Login';
+import { useState } from 'react';
+import PrivateRoute from './component/PrivateRoute/PrivateRoute';
+export const UserContext=createContext();
+
+
+
+
+
 
 function App() {
+   const [loggedInUser,setLoggedInUser]=useState({});
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider value={[loggedInUser,setLoggedInUser]}>
+    
+    
+    
+
+    
+    <Router>
+  <p>Email: {loggedInUser.email}</p>
+    <TopHeader></TopHeader>
+    <Switch>
+
+      
+
+      <Route path="/shop">
+<Shop></Shop>
+      </Route>
+      <Route path="/order">
+<Order></Order>
+      </Route>
+
+      <PrivateRoute path="/manage">
+        <Inventory></Inventory>
+      </PrivateRoute>
+
+      <Route exact path="/">
+        <Shop></Shop>
+      </Route>
+
+      <PrivateRoute path='/shipment'>
+<Shipment></Shipment>
+     </PrivateRoute>
+     <Route path='/login'>
+<Login></Login>
+     </Route>
+     <Route path='/product/:productKey'>
+<ProductDetail></ProductDetail>
+     </Route>
+
+      <Route path="*">
+        <NotFound></NotFound>
+      </Route>
+    </Switch>
+
+    </Router>
+        
+    </UserContext.Provider>
   );
 }
 
