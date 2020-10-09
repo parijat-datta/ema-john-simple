@@ -113,28 +113,31 @@ const handleSubmit=(e) => {
     .then(res=>{
       console.log(res)
       const newUserInfo ={...user};
+      newUserInfo.name=res.displayName;
       newUserInfo.error='';
       newUserInfo.success=true;
       setUser(newUserInfo);
       updateUserName(user.name);
+      setLoggedInUser(user);
+      history.replace(from);
     })
     .catch(error=> {
       // Handle Errors here.
       const newUserInfo={...user};
       newUserInfo.error=error.message;
       newUserInfo.success=false;
-      setUser(newUserInfo)
+     
       // ...
     });
   }
   if(!newUser&&user.email&&user.password){
     firebase.auth().signInWithEmailAndPassword(user.email, user.password)
     .then(res => {
-      console.log('sign in user info',res.user)
+      
       const newUserInfo ={...user};
       newUserInfo.error='';
       newUserInfo.success=true;
-      setUser(newUserInfo);
+      
      
       setLoggedInUser(newUserInfo);
        history.replace(from);
